@@ -21,7 +21,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
         return Ok(products);
     }
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = nameof(GetProductByIdAsync))]
     [ProducesResponseType(typeof(ProductDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ProductDto>> GetProductByIdAsync(int id)
@@ -43,7 +43,7 @@ public sealed class ProductsController(ISender sender) : ControllerBase
     {
         var product = await sender.Send(command);
 
-        return CreatedAtAction(nameof(GetProductByIdAsync), new { id = product.Id }, product);
+        return CreatedAtRoute(nameof(GetProductByIdAsync), new { id = product.Id }, product);
     }
 
     [HttpPut("{id:int}")]
