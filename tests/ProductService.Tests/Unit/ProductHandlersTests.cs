@@ -6,26 +6,10 @@ using ProductService.Application.Queries;
 using ProductService.Domain.Entities;
 using ProductService.Domain.Repositories;
 
-namespace ProductService.Tests;
+namespace ProductService.Tests.Unit;
 
-public class ProductHandlersTests
+public sealed class ProductHandlersTests
 {
-    [Fact]
-    public async Task CreateProduct_WithValidData_ReturnsProductDto()
-    {
-        // Arrange
-        var repository = new Mock<IProductRepository>();
-        repository.Setup(item => item.AddAsync(It.IsAny<Product>())).ReturnsAsync((Product product) => product);
-        var handler = new CreateProductCommandHandler(repository.Object);
-
-        // Act
-        var result = await handler.Handle(new CreateProductCommand("Laptop", "Portable", 1000m, 3), CancellationToken.None);
-
-        // Assert
-        result.Name.Should().Be("Laptop");
-        result.Price.Should().Be(1000m);
-    }
-
     [Fact]
     public async Task GetProductById_WhenProductExists_ReturnsProductDto()
     {
