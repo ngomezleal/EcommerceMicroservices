@@ -10,6 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
     networks:
       - ecommerce-network
     healthcheck:
@@ -32,6 +33,26 @@ services:
     depends_on:
       ecommerce-db:
         condition: service_healthy
+    networks:
+      - ecommerce-network
+
+  order-api:
+    build:
+      context: .
+      dockerfile: src/OrderService/OrderService.Api/Dockerfile
+    container_name: order-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__DefaultConnection: Host=ecommerce-db;Port=5432;Database=order_db;Username=postgres;Password=postgres
+      ProductServiceUrl: http://product-api:8080
+      ASPNETCORE_HTTP_PORTS: 8080
+    ports:
+      - "5002:8080"
+    depends_on:
+      ecommerce-db:
+        condition: service_healthy
+      product-api:
+        condition: service_started
     networks:
       - ecommerce-network
 
