@@ -2,9 +2,9 @@ using FluentAssertions;
 using ProductService.Application.Commands;
 using ProductService.Application.Validators;
 
-namespace ProductService.Tests;
+namespace ProductService.Tests.Unit;
 
-public class ProductValidatorsTests
+public sealed class ProductValidatorsTests
 {
     [Fact]
     public void CreateProduct_InvalidNamePriceAndStock_ReturnsValidationErrors()

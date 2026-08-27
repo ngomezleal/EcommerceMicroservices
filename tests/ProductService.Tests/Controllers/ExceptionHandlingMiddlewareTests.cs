@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using ProductService.Api.Middlewares;
 
-namespace ProductService.Tests;
+namespace ProductService.Tests.Controllers;
 
 public sealed class ExceptionHandlingMiddlewareTests
 {
@@ -24,7 +24,7 @@ public sealed class ExceptionHandlingMiddlewareTests
 
         // Assert
         context.Response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        context.Response.ContentType.Should().Be("application/problem+json");
+        context.Response.ContentType.Should().Be("application/json; charset=utf-8");
         var document = await ReadBodyAsync(context);
         document.RootElement.GetProperty("errors").GetProperty("Name")[0].GetString().Should().Be("Name is required.");
     }

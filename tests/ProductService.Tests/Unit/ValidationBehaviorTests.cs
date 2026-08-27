@@ -5,7 +5,7 @@ using ProductService.Application.Commands;
 using ProductService.Application.Dtos;
 using ProductService.Application.Validators;
 
-namespace ProductService.Tests;
+namespace ProductService.Tests.Unit;
 
 public sealed class ValidationBehaviorTests
 {
