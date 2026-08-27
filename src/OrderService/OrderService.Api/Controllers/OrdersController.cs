@@ -15,7 +15,7 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(IEnumerable<OrderDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersAsync() => Ok(await sender.Send(new GetOrdersQuery()));
 
-    [HttpGet("{id:int}")]
+    [HttpGet("{id:int}", Name = nameof(GetOrderByIdAsync))]
     [ProducesResponseType(typeof(OrderDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<OrderDto>> GetOrderByIdAsync(int id)
@@ -31,7 +31,7 @@ public sealed class OrdersController(ISender sender) : ControllerBase
     public async Task<ActionResult<OrderDto>> CreateOrderAsync([FromBody] CreateOrderCommand command)
     {
         var order = await sender.Send(command);
-        return CreatedAtAction(nameof(GetOrderByIdAsync), new { id = order.Id }, order);
+        return CreatedAtRoute(nameof(GetOrderByIdAsync), new { id = order.Id }, order);
     }
 
     [HttpPut("{id:int}/status")]

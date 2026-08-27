@@ -71,9 +71,9 @@ public sealed class ProductsControllerTests
         var result = await controller.CreateProductAsync(command);
 
         // Assert
-        var createdResult = result.Result.Should().BeOfType<CreatedAtActionResult>().Subject;
+        var createdResult = result.Result.Should().BeOfType<CreatedAtRouteResult>().Subject;
         createdResult.StatusCode.Should().Be(StatusCodes.Status201Created);
-        createdResult.ActionName.Should().Be(nameof(ProductsController.GetProductByIdAsync));
+        createdResult.RouteName.Should().Be(nameof(ProductsController.GetProductByIdAsync));
         createdResult.RouteValues!["id"].Should().Be(product.Id);
         createdResult.Value.Should().Be(product);
         sender.Verify(
