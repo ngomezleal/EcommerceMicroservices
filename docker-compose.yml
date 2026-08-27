@@ -19,6 +19,22 @@ services:
       retries: 5
       start_period: 10s
 
+  product-api:
+    build:
+      context: .
+      dockerfile: src/ProductService/ProductService.Api/Dockerfile
+    container_name: product-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ConnectionStrings__DefaultConnection: Host=ecommerce-db;Port=5432;Database=product_db;Username=postgres;Password=postgres
+    ports:
+      - "5001:8080"
+    depends_on:
+      ecommerce-db:
+        condition: service_healthy
+    networks:
+      - ecommerce-network
+
 networks:
   ecommerce-network:
     driver: bridge
