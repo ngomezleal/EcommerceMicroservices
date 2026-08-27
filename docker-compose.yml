@@ -3,7 +3,7 @@ services:
     image: postgres:16-alpine
     container_name: ecommerce-db
     environment:
-      POSTGRES_DB: ecommercedb
+      POSTGRES_DB: product_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
@@ -13,7 +13,7 @@ services:
     networks:
       - ecommerce-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d ecommercedb"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d product_db"]
       interval: 10s
       timeout: 5s
       retries: 5
