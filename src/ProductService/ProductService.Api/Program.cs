@@ -1,6 +1,7 @@
 using Serilog;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Application;
+using ProductService.Api.Middlewares;
 using ProductService.Infrastructure;
 using ProductService.Infrastructure.Persistence;
 
@@ -12,7 +13,9 @@ builder.Host.UseSerilog((context, services, loggerConfiguration) => loggerConfig
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHealthChecks();
+builder.Services.AddControllers();
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<ProductDbContext>("postgresql");
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -25,13 +28,15 @@ using (var scope = app.Services.CreateScope())
     await ProductDbContextSeed.SeedAsync(dbContext);
 }
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
