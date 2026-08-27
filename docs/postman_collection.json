@@ -227,6 +227,43 @@
                   "    pm.expect(order).to.have.property(\"id\").that.is.a(\"number\");",
                   "    pm.expect(order).to.include({ customerId: \"customer-qa-postman\" });",
                   "    pm.expect(order).to.have.property(\"items\").that.is.an(\"array\").with.lengthOf(1);",
+                  "});",
+                  "",
+                  "pm.collectionVariables.set(\"created_order_id\", order.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar Estado de Orden",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{order_service_url}}/api/orders/{{created_order_id}}/status"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Estado de orden actualizado responde 204\", function () {",
+                  "    pm.response.to.have.status(204);",
                   "});"
                 ]
               }
@@ -313,6 +350,32 @@
                   "pm.test(\"Orden con ID 1 responde 200\", function () {",
                   "    pm.response.to.have.status(200);",
                   "    pm.expect(pm.response.json()).to.have.property(\"id\", 1);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Limpieza",
+      "item": [
+        {
+          "name": "Eliminar Producto Creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{product_service_url}}/api/products/{{created_product_id}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Producto eliminado responde 204\", function () {",
+                  "    pm.response.to.have.status(204);",
                   "});"
                 ]
               }
